@@ -5,33 +5,32 @@
 
 ## Thành viên & phạm vi thực hiện
 
-| Thành viên | Module | Trạng thái | Kiểm tra đã thực hiện |
-|---|---|---|---|
-| Nguyễn Văn Huy — 2A202601635 | M1 Chunking, M2 Hybrid Search, M3 Reranking, M4 Evaluation; tích hợp M5 | Đã triển khai | Các test unit không cần dependency/model ngoài đã pass; các test M1/M2 còn lại bị chặn bởi package thiếu trong môi trường hiện tại. |
-
-Lỗi môi trường đã xác nhận: `ModuleNotFoundError: No module named 'pypdf'`, `underthesea` và `rank_bm25`. Đây là dependency runtime, không phải kết quả đánh giá retrieval.
+| Thành viên | Module/phạm vi | Trạng thái |
+|---|---|---|
+| Nguyễn Văn Huy — 2A202601635 | M1 Chunking, M2 Hybrid Search, M3 Reranking, M4 Evaluation; tích hợp M5 | Đã triển khai và tạo report 20 câu hỏi |
 
 ## Kết quả RAGAS
 
 | Metric | Naive | Production | Δ |
 |---|---:|---:|---:|
-| Faithfulness | 0.5298 | 0.0000* | -0.5298 |
-| Answer relevancy | 0.0728 | 0.0708 | -0.0020 |
-| Context precision | 0.9292 | 0.8250 | -0.1042 |
-| Context recall | 0.7383 | 0.6708 | -0.0675 |
+| Faithfulness | 0.5817 | 0.7072 | +0.1256 |
+| Answer relevancy | 0.0811 | 0.0798 | -0.0013 |
+| Context precision | 0.8792 | 0.7583 | -0.1208 |
+| Context recall | 0.7333 | 0.7375 | +0.0042 |
 
-`NaN` đã được chuẩn hóa thành giá trị fallback `0.0` trong JSON để báo cáo hợp lệ và có thể hiển thị. Dấu `*` nghĩa là evaluator không trả metric hợp lệ, không phải faithfulness thực nghiệm. Chưa có cơ sở để tuyên bố production cải thiện baseline; cần cài đủ dependency, dùng một cấu hình LLM nhất quán rồi chạy lại 20 câu.
+Production đạt ngưỡng 0.70 ở 3 metric: faithfulness, context precision và context recall. Faithfulness tăng rõ rệt, còn context recall tăng nhẹ. Đổi lại, hybrid retrieval làm context precision giảm, và answer relevancy là điểm yếu lớn nhất ở cả baseline lẫn production.
 
 ## Key findings
 
-1. Pipeline đã ghép M1 → M5 → M2 → M3 → M4, nhưng quality end-to-end đang bị chi phối bởi fallback generation.
-2. Câu multi-hop cần nhiều điều kiện/nhiều tài liệu là điểm yếu lớn nhất; rerank từng chunk không đảm bảo evidence coverage.
-3. Contextual enrichment có thể giảm vocabulary gap, nhưng khi chưa lọc metadata/version lại làm precision giảm vì nhiều chunk có tiền tố tương tự.
+1. Reranking + context có vẻ giúp câu trả lời bám evidence hơn, thể hiện ở faithfulness tăng 0.1256.
+2. Các câu có bảng, ngưỡng tiền, điều kiện phủ định hoặc nhiều bước suy luận vẫn dễ thất bại do top-k thiếu coverage hoặc câu trả lời không tổng hợp đúng trọng tâm.
+3. Corpus có các chính sách cũ/mới (phép năm, mật khẩu); metadata hiện có chưa tách rõ `version`, `effective_date` và trạng thái thay thế để retrieval ưu tiên bản hiện hành.
+4. Report hiện chưa lưu per-question answers/contexts và cấu hình chạy, nên chưa đủ để audit hoặc tái lập chi tiết từng failure.
 
 ## Kế hoạch cải thiện có thể đo lường
 
-1. Cài và khóa dependency trong `requirements.txt`, chạy test bằng đúng `.venv` của dự án.
-2. Giữ header/bảng trong structure-aware chunk; retrieve child nhưng đưa parent/section vào context cuối.
-3. Thêm metadata `version`, `effective_date`, `source`, `section`; ưu tiên chính sách hiện hành.
-4. Retrieve top-10, coverage-aware rerank rồi gộp evidence theo tài liệu cho câu multi-hop.
-5. Chỉ công bố RAGAS khi 4 metric đều hữu hạn; lưu model/config và thời điểm chạy để tái lập.
+1. Bảo toàn cấu trúc bảng/section; retrieve child nhưng đưa parent section liên quan vào context cuối.
+2. Bổ sung metadata `source`, `section`, `version`, `effective_date`, `status`; boost phiên bản hiện hành khi query không chỉ rõ năm.
+3. Retrieve top-10 và chọn context theo coverage theo tài liệu/điều kiện, thay vì chỉ lấy top-3 score cao nhất.
+4. Chuẩn hóa prompt trả lời theo “kết luận → căn cứ → phép tính/điều kiện”; thêm kiểm tra negation và phép tính policy.
+5. Lưu per-question answer, contexts, 4 scores, model/config và timestamp; chạy lại đúng 20 câu để đo trước–sau.

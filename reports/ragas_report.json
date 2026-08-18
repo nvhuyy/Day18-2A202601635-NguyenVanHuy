@@ -1,74 +1,32 @@
 {
   "aggregate": {
-    "faithfulness": 0.0,
-    "answer_relevancy": 0.07080085877085038,
-    "context_precision": 0.8249999999425001,
-    "context_recall": 0.6708333333333333
+    "faithfulness": 0.7072222222222222,
+    "answer_relevancy": 0.07978311760352481,
+    "context_precision": 0.7583333332808333,
+    "context_recall": 0.7375
   },
   "num_questions": 20,
   "failures": [
     {
-      "question": "Nhân viên được nghỉ bao nhiêu ngày khi kết hôn?",
+      "question": "Muốn mua thiết bị trị giá 55 triệu cần ai phê duyệt?",
+      "worst_metric": "context_precision",
+      "score": 0.0,
+      "diagnosis": "Too many irrelevant chunks",
+      "suggested_fix": "Add reranking or metadata filter"
+    },
+    {
+      "question": "Nghỉ phép không lương 20 ngày cần ai phê duyệt?",
       "worst_metric": "faithfulness",
       "score": 0.0,
       "diagnosis": "LLM hallucinating",
       "suggested_fix": "Tighten prompt, lower temperature"
     },
     {
-      "question": "Bảo hiểm sức khỏe PVI có hạn mức bao nhiêu cho nhân viên?",
-      "worst_metric": "faithfulness",
-      "score": 0.0,
-      "diagnosis": "LLM hallucinating",
-      "suggested_fix": "Tighten prompt, lower temperature"
-    },
-    {
-      "question": "Phụ cấp ăn trưa hàng tháng là bao nhiêu?",
-      "worst_metric": "faithfulness",
-      "score": 0.0,
-      "diagnosis": "LLM hallucinating",
-      "suggested_fix": "Tighten prompt, lower temperature"
-    },
-    {
-      "question": "Nhân viên được nghỉ bao nhiêu ngày phép năm?",
-      "worst_metric": "faithfulness",
-      "score": 0.0,
-      "diagnosis": "LLM hallucinating",
-      "suggested_fix": "Tighten prompt, lower temperature"
-    },
-    {
-      "question": "Thâm niên bao nhiêu năm thì được cộng thêm ngày phép?",
-      "worst_metric": "faithfulness",
-      "score": 0.0,
-      "diagnosis": "LLM hallucinating",
-      "suggested_fix": "Tighten prompt, lower temperature"
-    },
-    {
-      "question": "Mật khẩu phải có tối thiểu bao nhiêu ký tự?",
-      "worst_metric": "faithfulness",
-      "score": 0.0,
-      "diagnosis": "LLM hallucinating",
-      "suggested_fix": "Tighten prompt, lower temperature"
-    },
-    {
-      "question": "Bao lâu phải đổi mật khẩu một lần?",
-      "worst_metric": "faithfulness",
-      "score": 0.0,
-      "diagnosis": "LLM hallucinating",
-      "suggested_fix": "Tighten prompt, lower temperature"
-    },
-    {
-      "question": "Có cần kích hoạt xác thực đa yếu tố (MFA) không?",
-      "worst_metric": "faithfulness",
-      "score": 0.0,
-      "diagnosis": "LLM hallucinating",
-      "suggested_fix": "Tighten prompt, lower temperature"
-    },
-    {
-      "question": "Nhân viên thử việc có được nghỉ phép năm không?",
-      "worst_metric": "faithfulness",
-      "score": 0.0,
-      "diagnosis": "LLM hallucinating",
-      "suggested_fix": "Tighten prompt, lower temperature"
+      "question": "Nhân viên được tài trợ khóa học 25 triệu, nghỉ việc sau 8 tháng hoàn thành khóa học. Phải hoàn trả bao nhiêu?",
+      "worst_metric": "answer_relevancy",
+      "score": 0.04608918795195018,
+      "diagnosis": "Answer doesn't match question",
+      "suggested_fix": "Improve prompt template"
     },
     {
       "question": "Khi phát hiện malware trên máy, nhân viên có nên tự xử lý không?",
@@ -76,6 +34,48 @@
       "score": 0.0,
       "diagnosis": "LLM hallucinating",
       "suggested_fix": "Tighten prompt, lower temperature"
+    },
+    {
+      "question": "Nhân viên tạm ứng 15 triệu, sau 20 ngày mới thanh toán. Bị phạt bao nhiêu?",
+      "worst_metric": "answer_relevancy",
+      "score": 0.0,
+      "diagnosis": "Answer doesn't match question",
+      "suggested_fix": "Improve prompt template"
+    },
+    {
+      "question": "Mentor và buddy của nhân viên mới có thể là cùng một người không? Quản lý trực tiếp có thể làm mentor không?",
+      "worst_metric": "answer_relevancy",
+      "score": 0.0,
+      "diagnosis": "Answer doesn't match question",
+      "suggested_fix": "Improve prompt template"
+    },
+    {
+      "question": "Nhân viên được nghỉ bao nhiêu ngày phép năm?",
+      "worst_metric": "answer_relevancy",
+      "score": 0.0,
+      "diagnosis": "Answer doesn't match question",
+      "suggested_fix": "Improve prompt template"
+    },
+    {
+      "question": "Một nhân viên Senior có 9 năm thâm niên được nghỉ bao nhiêu ngày phép năm và lương trong khoảng nào?",
+      "worst_metric": "answer_relevancy",
+      "score": 0.11735419256284674,
+      "diagnosis": "Answer doesn't match question",
+      "suggested_fix": "Improve prompt template"
+    },
+    {
+      "question": "Nếu cần mua một chiếc laptop 30 triệu cho nhân viên mới, ai phê duyệt và cần gì từ phòng CNTT?",
+      "worst_metric": "answer_relevancy",
+      "score": 0.0,
+      "diagnosis": "Answer doesn't match question",
+      "suggested_fix": "Improve prompt template"
+    },
+    {
+      "question": "Bao lâu phải đổi mật khẩu một lần?",
+      "worst_metric": "context_precision",
+      "score": 0.0,
+      "diagnosis": "Too many irrelevant chunks",
+      "suggested_fix": "Add reranking or metadata filter"
     }
   ]
 }

@@ -272,24 +272,6 @@ def extract_metadata(text: str) -> dict:
     LLM extract metadata tự động: topic, entities, date_range, category.
     """
     # : Implement auto metadata extraction
-    # if OPENAI_API_KEY:
-    #     try:
-    #         import json as _json
-    #         from openai import OpenAI
-    #         client = OpenAI()
-    #         resp = client.chat.completions.create(
-    #             model="gpt-4o-mini",
-    #             messages=[
-    #                 {"role": "system", "content": 'Trích xuất metadata từ đoạn văn. Trả về JSON: {"topic": "...", "entities": ["..."], "category": "policy|hr|it|finance", "language": "vi|en"}'},
-    #                 {"role": "user", "content": text},
-    #             ],
-    #             max_tokens=150,
-    #         )
-    #         return _json.loads(resp.choices[0].message.content)
-    #     except Exception as e:
-    #         print(f"  ⚠️  OpenAI metadata failed: {e}")
-    #
-    # return {"topic": "general", "entities": [], "category": "policy", "language": "vi"}
     if not text.strip():
         return {
             "topic": "general",
@@ -325,8 +307,9 @@ def extract_metadata(text: str) -> dict:
                     },
                 ],
                 max_tokens=150,
+                response_format={"type": "json_object"},
             )
-
+            print(repr(resp.choices[0].message.content))
             content = resp.choices[0].message.content or ""
             parsed = _json.loads(content)
 
@@ -361,28 +344,6 @@ def _enrich_single_call(text: str, source: str) -> dict:
     ⚠️ Cost optimization: 1 API call thay vì 4 calls riêng lẻ.
     """
     # : Implement combined enrichment (1 call/chunk)
-    # if OPENAI_API_KEY:
-    #     try:
-    #         import json as _json
-    #         from openai import OpenAI
-    #         client = OpenAI()
-    #         resp = client.chat.completions.create(
-    #             model="gpt-4o-mini",
-    #             messages=[
-    #                 {"role": "system", "content": """Phân tích đoạn văn và trả về JSON:
-    # {
-    #   "summary": "tóm tắt 2-3 câu",
-    #   "questions": ["câu hỏi 1", "câu hỏi 2", "câu hỏi 3"],
-    #   "context": "1 câu mô tả đoạn văn nằm ở đâu trong tài liệu",
-    #   "metadata": {"topic": "...", "entities": ["..."], "category": "policy|hr|it|finance", "language": "vi|en"}
-    # }"""},
-    #                 {"role": "user", "content": f"Tài liệu: {source}\n\nĐoạn văn:\n{text}"},
-    #             ],
-    #             max_tokens=400,
-    #         )
-    #         return _json.loads(resp.choices[0].message.content)
-    #     except Exception as e:
-    #         print(f"  ⚠️  Enrichment API failed: {e}")
     if not text.strip():
         return {}
 
@@ -440,8 +401,9 @@ Chỉ trả về JSON, không thêm markdown hoặc giải thích.
                 },
             ],
             max_tokens=400,
+            response_format={"type": "json_object"},
         )
-
+        print(repr(resp.choices[0].message.content))
         content = resp.choices[0].message.content or ""
         result = _json.loads(content)
 
