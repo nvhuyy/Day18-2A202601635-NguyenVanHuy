@@ -38,7 +38,7 @@ def main():
     llm_client = None
     if OPENAI_API_KEY:
         from openai import OpenAI
-        llm_client = OpenAI()
+        llm_client = OpenAI(base_url="https://api.mistral.ai/v1")
 
     for i, item in enumerate(test_set):
         results = search.search(item["question"], top_k=3, collection=NAIVE_COLLECTION)
@@ -47,7 +47,7 @@ def main():
         if llm_client and contexts:
             try:
                 context_str = "\n\n".join(contexts)
-                resp = llm_client.chat.completions.create(model="gpt-4o-mini", messages=[
+                resp = llm_client.chat.completions.create(model="ministral-8b-2512", messages=[
                     {"role": "system", "content": "Trả lời CHỈ dựa trên context. Nếu không có → nói 'Không tìm thấy.'"},
                     {"role": "user", "content": f"Context:\n{context_str}\n\nCâu hỏi: {item['question']}"},
                 ])

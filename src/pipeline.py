@@ -68,9 +68,9 @@ def run_query(query: str, search: HybridSearch, reranker: CrossEncoderReranker) 
     if OPENAI_API_KEY and contexts:
         try:
             from openai import OpenAI
-            client = OpenAI()
+            client = OpenAI(base_url="https://api.mistral.ai/v1",)
             context_str = "\n\n".join(contexts)
-            resp = client.chat.completions.create(model="gpt-4o-mini", messages=[
+            resp = client.chat.completions.create(model="ministral-8b-2512", messages=[
                 {"role": "system", "content": "Trả lời CHỈ dựa trên context. Nếu không có → nói 'Không tìm thấy.'"},
                 {"role": "user", "content": f"Context:\n{context_str}\n\nCâu hỏi: {query}"},
             ])
